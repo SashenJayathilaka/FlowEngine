@@ -8,3 +8,9 @@ export const helloWorld = inngest.createFunction(
     return { message: `Hello ${event.data.email}!` };
   }
 );
+
+/*   experimental_telemetry: {
+    isEnabled: true,
+    recordInputs: true,
+    recordOutputs: true,
+  }, */
