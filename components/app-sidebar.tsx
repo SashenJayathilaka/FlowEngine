@@ -23,6 +23,7 @@ import {
   SidebarMenuItem,
 } from "./ui/sidebar";
 import { authClient } from "@/lib/auth-client";
+import { useHasActiveSubscription } from "@/features/subscriptions/hooks/use-subscriptions";
 
 const menuItems = [
   {
@@ -60,6 +61,7 @@ const menuItems = [
 const AppSidebar = () => {
   const router = useRouter();
   const pathName = usePathname();
+  const { hasActiveSubscription, isLoading } = useHasActiveSubscription();
 
   return (
     <Sidebar collapsible="icon">
@@ -108,44 +110,52 @@ const AppSidebar = () => {
         ))}
       </SidebarContent>
       <SidebarFooter>
-        <SidebarMenuItem>
-          <SidebarMenuButton
-            tooltip="Upgrade Pro"
-            className="gap-x-4 h-10 px-4"
-            onClick={() => {}}
-          >
-            <StarIcon className="h-4 w-4" />
-            <span>Upgrade Pro</span>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
-        <SidebarMenuItem>
-          <SidebarMenuButton
-            tooltip="Billing Portal"
-            className="gap-x-4 h-10 px-4"
-            onClick={() => {}}
-          >
-            <CreditCardIcon className="h-4 w-4" />
-            <span>Billing Portal</span>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
-        <SidebarMenuItem>
-          <SidebarMenuButton
-            tooltip="SignOut"
-            className="gap-x-4 h-10 px-4"
-            onClick={() =>
-              authClient.signOut({
-                fetchOptions: {
-                  onSuccess: () => {
-                    router.push("/login");
+        <SidebarMenu>
+          {!hasActiveSubscription && !isLoading && (
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                tooltip="Upgrade Pro"
+                className="gap-x-4 h-10 px-4"
+                onClick={() =>
+                  authClient.checkout({
+                    slug: "pro",
+                  })
+                }
+              >
+                <StarIcon className="h-4 w-4" />
+                <span>Upgrade Pro</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          )}
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              tooltip="Billing Portal"
+              className="gap-x-4 h-10 px-4"
+              onClick={() => authClient.customer.portal()}
+            >
+              <CreditCardIcon className="h-4 w-4" />
+              <span>Billing Portal</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              tooltip="SignOut"
+              className="gap-x-4 h-10 px-4"
+              onClick={() =>
+                authClient.signOut({
+                  fetchOptions: {
+                    onSuccess: () => {
+                      router.push("/login");
+                    },
                   },
-                },
-              })
-            }
-          >
-            <LogInIcon className="h-4 w-4" />
-            <span>Sign Out</span>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
+                })
+              }
+            >
+              <LogInIcon className="h-4 w-4" />
+              <span>Sign Out</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
   );
