@@ -50,3 +50,31 @@ export const useRemoveWorkflow = () => {
     })
   );
 };
+
+/** Prefetch workflows data for a specific ID   */
+export const usePrefetchWorkflow = (id: string) => {
+  const trpc = useTRPC();
+
+  return useSuspenseQuery(trpc.workflows.getOne.queryOptions({ id }));
+};
+
+/** Update a workflow */
+
+export const useUpdateWorkflowName = () => {
+  const queryClient = useQueryClient();
+  const trpc = useTRPC();
+
+  return useMutation(
+    trpc.workflows.updateName.mutationOptions({
+      onSuccess: (data) => {
+        toast.success(`Workflow "${data.name}" updated`);
+        queryClient.invalidateQueries(
+          trpc.workflows.getOne.queryOptions({ id: data.id })
+        );
+      },
+      onError: (error) => {
+        toast.error(`Error updating workflow: ${error.message}`);
+      },
+    })
+  );
+};
