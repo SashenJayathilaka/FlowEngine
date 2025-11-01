@@ -18,7 +18,9 @@ import {
   Panel,
   ReactFlow,
 } from "@xyflow/react";
+import { useSetAtom } from "jotai";
 import { useCallback, useState } from "react";
+import { editorAtom } from "../store/atomes";
 import { AddNodeButton } from "./add-node-button";
 
 import "@xyflow/react/dist/style.css";
@@ -32,6 +34,8 @@ export const EditorError = () => {
 };
 
 const Editor = ({ workflowId }: { workflowId: string }) => {
+  const setEditor = useSetAtom(editorAtom);
+
   const { data: workflow } = usePrefetchWorkflow(workflowId);
 
   const [nodes, setNodes] = useState<Node[]>(workflow.nodes);
@@ -62,6 +66,12 @@ const Editor = ({ workflowId }: { workflowId: string }) => {
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         nodeTypes={nodeComponents}
+        onInit={setEditor}
+        snapGrid={[10, 10]}
+        snapToGrid
+        panOnScroll
+        panOnDrag={false}
+        selectionOnDrag
         fitView
       >
         <Background />
