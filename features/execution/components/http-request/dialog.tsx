@@ -33,7 +33,7 @@ import { useForm } from "react-hook-form";
 import z from "zod";
 
 const formSchema = z.object({
-  endPoint: z.url({ message: "Invalid URL format" }),
+  endpoint: z.url({ message: "Invalid URL format" }),
   method: z.enum(["GET", "POST", "PUT", "DELETE", "PATCH"]),
   body: z.string().optional(),
   //.refine()
@@ -43,39 +43,35 @@ interface HttpRequestDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSubmit: (values: z.infer<typeof formSchema>) => void;
-  defaultEndPoint?: string;
-  defaultMethod?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
-  defaultBody?: string;
+  defaultValues?: Partial<HttpRequestFormValues>;
 }
 
-export type FormType = z.infer<typeof formSchema>;
+export type HttpRequestFormValues = z.infer<typeof formSchema>;
 
 export function HttpRequestDialog({
   open,
   onOpenChange,
-  defaultEndPoint,
-  defaultMethod = "GET",
-  defaultBody,
+  defaultValues = {},
   onSubmit,
 }: HttpRequestDialogProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      endPoint: defaultEndPoint,
-      method: defaultMethod,
-      body: defaultBody,
+      endpoint: defaultValues.endpoint || "",
+      method: defaultValues.method || "GET",
+      body: defaultValues.body || "",
     },
   });
 
   useEffect(() => {
     if (open) {
       form.reset({
-        endPoint: defaultEndPoint,
-        method: defaultMethod,
-        body: defaultBody,
+        endpoint: defaultValues.endpoint || "",
+        method: defaultValues.method || "GET",
+        body: defaultValues.body || "",
       });
     }
-  }, [open, defaultEndPoint, defaultMethod, defaultBody, form]);
+  }, [open, defaultValues, form]);
 
   const watchMethod = form.watch("method");
   const showBodyField = ["POST", "PUT", "PATCH"].includes(watchMethod);
@@ -131,7 +127,7 @@ export function HttpRequestDialog({
             />
             <FormField
               control={form.control}
-              name="endPoint"
+              name="endpoint"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Endpoint Url</FormLabel>
