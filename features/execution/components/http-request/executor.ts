@@ -3,6 +3,7 @@ import { NonRetriableError } from "inngest";
 import ky, { type Options as KyOption } from "ky";
 
 export type HttpRequestData = {
+  variableName?: string;
   endpoint?: string;
   method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
   body?: string;
@@ -18,6 +19,10 @@ export const httpRequestExecutor: NodeExecutor<HttpRequestData> = async ({
     throw new NonRetriableError("No endpoint provided for HTTP request");
   }
 
+  if (!data.variableName) {
+    throw new NonRetriableError("No variable name provided for HTTP request");
+  }
+
   const result = await step.run("http-request", async () => {
     const endpoint = data.endpoint!;
     const method = data.method || "GET";
@@ -27,13 +32,10 @@ export const httpRequestExecutor: NodeExecutor<HttpRequestData> = async ({
     };
 
     if (["POST", "PUT", "PATCH"].includes(method)) {
-      if (data.body) {
-        options.body = data.body;
-        options.headers = {
-          ...(options.headers || {}),
-          "content-type": "application/json",
-        };
-      }
+      options.body = data.body;
+      options.headers = {
+        "content-type": "application/json",
+      };
     }
 
     const response = await ky(endpoint, options);
@@ -42,14 +44,22 @@ export const httpRequestExecutor: NodeExecutor<HttpRequestData> = async ({
       ? await response.json()
       : await response.text();
 
-    return {
-      ...context,
+    const responsePayload = {
       httpResponse: {
         status: response.status,
         body: responseBody,
         data: responseBody,
       },
     };
+
+    if (data.variableName) {
+      return {
+        ...context,
+        [data.variableName]: responsePayload,
+      };
+    }
+
+    return { ...context, ...responsePayload };
   });
 
   //TODO:
