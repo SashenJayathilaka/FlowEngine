@@ -2,7 +2,7 @@ import { LoadingView } from "@/components/entry-components";
 import Editor, { EditorError } from "@/features/editor/components/editor";
 import EditorHeader from "@/features/editor/components/editor-header";
 import { requireAuth } from "@/lib/auth-utils";
-import { HydrateClient } from "@/trpc/server";
+import { HydrateClient, trpc } from "@/trpc/server";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
