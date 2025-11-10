@@ -1,3 +1,4 @@
+import { GoogleFormTriggerExecutor } from "@/features/triggers/components/google-form-trigger/executor";
 import { manualTriggerExecutor } from "@/features/triggers/components/manual-trigger/executor";
 import { NodeType } from "@/lib/generated/prisma";
 import { httpRequestExecutor } from "../components/http-request/executor";
@@ -7,6 +8,7 @@ export const executorRegistry: Record<NodeType, NodeExecutor> = {
   [NodeType.MANUAL_TRIGGER]: manualTriggerExecutor,
   [NodeType.INITIAL]: manualTriggerExecutor,
   [NodeType.HTTP_REQUEST]: httpRequestExecutor, // TODO: fix typeing
+  [NodeType.GOOGLE_FORM_TRIGGER]: GoogleFormTriggerExecutor,
 };
 
 export const getExecutor = (type: NodeType): NodeExecutor => {
@@ -16,3 +18,5 @@ export const getExecutor = (type: NodeType): NodeExecutor => {
   }
   return executor;
 };
+
+// https:jsonplaceholder.typicode.com/todos/1
