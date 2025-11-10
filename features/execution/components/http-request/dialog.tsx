@@ -37,7 +37,7 @@ const formSchema = z.object({
     .string()
     .min(1, { message: "Variable name is required" })
     .regex(/^[A-Za-z_][A-Za-z0-9_]*$/, { message: "Invalid variable name" }),
-  endpoint: z.url({ message: "Invalid URL format" }),
+  endpoint: z.string().min(1, { message: "Endpoint is required" }),
   method: z.enum(["GET", "POST", "PUT", "DELETE", "PATCH"]),
   body: z.string().optional(),
   //.refine()

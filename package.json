@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "dev:all": "concurrently \"npm run dev\" \"npx inngest-cli@latest dev\"",
+    "dev:ngrok": "concurrently \"npm run dev\" \"ngrok http --url=amused-top-sunbeam.ngrok-free.app 3000\"",
+    "dev:all:ngrok": "concurrently \"npm run dev:all\" \"ngrok http --url=amused-top-sunbeam.ngrok-free.app 3000\"",
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "biome check",
