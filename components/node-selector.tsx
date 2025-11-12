@@ -52,6 +52,18 @@ const executionNode: NodeTypeOption[] = [
     description: "Makes an HTTP request to a specified URL.",
     icon: GlobeIcon,
   },
+  {
+    type: NodeType.GEMINI,
+    label: "Gemini AI",
+    description: "Interact with Google's Gemini AI models.",
+    icon: "/images/gemini_icon.png",
+  },
+  {
+    type: NodeType.OPENAI,
+    label: "OpenAI",
+    description: "OpenAI's powerful language models at your fingertips.",
+    icon: "/images/openai.svg",
+  },
 ];
 
 interface NodeSelectorProps {

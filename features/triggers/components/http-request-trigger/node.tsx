@@ -4,8 +4,8 @@ import { HTTP_REQUEST_CHANNEL_ID } from "@/inngest/channels/http-request";
 import { Node, NodeProps, useReactFlow } from "@xyflow/react";
 import { GlobeIcon } from "lucide-react";
 import { memo, useState } from "react";
-import { useNodeStatus } from "../../hooks/use-node-status";
-import BaseExecutionNode from "../base-execution-node";
+import { useNodeStatus } from "../../../execution/hooks/use-node-status";
+import BaseExecutionNode from "../../../execution/components/base-execution-node";
 import { fetchHttpRequestRealTimeToken } from "./actions";
 import { HttpRequestDialog, HttpRequestFormValues } from "./dialog";
 

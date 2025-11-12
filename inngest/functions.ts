@@ -8,6 +8,7 @@ import { manualTriggerChannel } from "./channels/manual-trigger";
 import { stripeTriggerChannel } from "./channels/stripe-trigger";
 import { inngest } from "./client";
 import { topologicalSort } from "./utils";
+import { geminiChannel } from "./channels/gemini";
 
 export const executeWorkflow = inngest.createFunction(
   {
@@ -21,6 +22,7 @@ export const executeWorkflow = inngest.createFunction(
       manualTriggerChannel(),
       googleFormTriggerChannel(),
       stripeTriggerChannel(),
+      geminiChannel(),
     ],
   },
 

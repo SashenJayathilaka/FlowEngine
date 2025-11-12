@@ -1,8 +1,9 @@
+import { geminiRequestExecutor } from "@/features/triggers/components/geminai/executor";
 import { GoogleFormTriggerExecutor } from "@/features/triggers/components/google-form-trigger/executor";
 import { manualTriggerExecutor } from "@/features/triggers/components/manual-trigger/executor";
 import { StripeTriggerExecutor } from "@/features/triggers/components/stripe-trigger copy/executor";
 import { NodeType } from "@/lib/generated/prisma";
-import { httpRequestExecutor } from "../components/http-request/executor";
+import { httpRequestExecutor } from "../../triggers/components/http-request-trigger/executor";
 import { NodeExecutor } from "../types";
 
 export const executorRegistry: Record<NodeType, NodeExecutor> = {
@@ -11,6 +12,9 @@ export const executorRegistry: Record<NodeType, NodeExecutor> = {
   [NodeType.HTTP_REQUEST]: httpRequestExecutor,
   [NodeType.GOOGLE_FORM_TRIGGER]: GoogleFormTriggerExecutor,
   [NodeType.STRIPE_TRIGGER]: StripeTriggerExecutor,
+  [NodeType.GEMINI]: geminiRequestExecutor,
+  [NodeType.OPENAI]: geminiRequestExecutor, // Temporary mapping until OpenAI executor is implemented
+  [NodeType.ANTHROPIC]: geminiRequestExecutor, // Temporary mapping until Anthropic executor is implemented
 };
 
 export const getExecutor = (type: NodeType): NodeExecutor => {
