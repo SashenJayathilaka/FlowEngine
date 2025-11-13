@@ -1,17 +1,18 @@
 "use server";
 
+import { deepseekChannel } from "@/inngest/channels/deepseek";
 import { openaiChannel } from "@/inngest/channels/openai";
 import { inngest } from "@/inngest/client";
 import { getSubscriptionToken, type Realtime } from "@inngest/realtime";
 
-export type OpenaiRequestToken = Realtime.Token<
-  typeof openaiChannel,
+export type DeepseekRequestToken = Realtime.Token<
+  typeof deepseekChannel,
   ["status"]
 >;
 
-export async function fetchOpenaiRequestRealTimeToken(): Promise<OpenaiRequestToken> {
+export async function fetchDeepseekRequestRealTimeToken(): Promise<DeepseekRequestToken> {
   const token = await getSubscriptionToken(inngest, {
-    channel: openaiChannel(),
+    channel: deepseekChannel(),
     topics: ["status"],
   });
   return token;

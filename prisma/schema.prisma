@@ -97,6 +97,7 @@ enum NodeType {
   ANTHROPIC
   GEMINI
   OPENAI
+  DEEPSEEK
 }
 
 model Node {

@@ -64,6 +64,18 @@ const executionNode: NodeTypeOption[] = [
     description: "OpenAI's powerful language models at your fingertips.",
     icon: "/images/openai.svg",
   },
+  {
+    type: NodeType.ANTHROPIC,
+    label: "Anthropic",
+    description: "Anthropic's powerful AI models at your fingertips.",
+    icon: "/images/anthropic.svg",
+  },
+  {
+    type: NodeType.DEEPSEEK,
+    label: "Deepseek AI",
+    description: "Deepseek's powerful AI models at your fingertips.",
+    icon: "/images/Deepseek-logo-icon.svg",
+  },
 ];
 
 interface NodeSelectorProps {

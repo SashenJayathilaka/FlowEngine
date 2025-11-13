@@ -143,7 +143,10 @@ export function GeminiAiDialog({
                       defaultValue={field.value}
                     >
                       <FormControl>
-                        <SelectTrigger className="w-full">
+                        <SelectTrigger
+                          className="w-full"
+                          defaultValue={field.value[0]}
+                        >
                           <SelectValue placeholder="Select a model" />
                         </SelectTrigger>
                       </FormControl>

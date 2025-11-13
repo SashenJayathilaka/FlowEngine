@@ -1,24 +1,27 @@
 "use client ";
 
+import { ANTHROPIC_CHANNEL_NAME } from "@/inngest/channels/anthropic";
 import { Node, NodeProps, useReactFlow } from "@xyflow/react";
 import { memo, useState } from "react";
 import BaseExecutionNode from "../../../execution/components/base-execution-node";
 import { useNodeStatus } from "../../../execution/hooks/use-node-status";
+import { fetchAnthropicRequestRealTimeToken } from "./actions";
+import {
+  AnthropicDialog,
+  AnthropicFormValues,
+  AVAILABLE_MODELS,
+} from "./dialog";
 
-import { OPENAI_CHANNEL_NAME } from "@/inngest/channels/openai";
-import { fetchOpenaiRequestRealTimeToken } from "./actions";
-import { AVAILABLE_MODELS, OpenaiDialog, OpenaiFormValues } from "./dialog";
-
-type OpenAiNodeData = {
+type anthropicNodeData = {
   variableName?: string;
   model?: (typeof AVAILABLE_MODELS)[number];
   systemPrompt?: string;
   userPrompt?: string;
 };
 
-type OpenAiNodeType = Node<OpenAiNodeData>;
+type AnthropicNodeType = Node<anthropicNodeData>;
 
-export const OpenAiNode = memo((props: NodeProps<OpenAiNodeType>) => {
+export const AnthropicNode = memo((props: NodeProps<AnthropicNodeType>) => {
   const nodeData = props.data;
 
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -26,14 +29,14 @@ export const OpenAiNode = memo((props: NodeProps<OpenAiNodeType>) => {
 
   const nodeStatus = useNodeStatus({
     nodeId: props.id,
-    channel: OPENAI_CHANNEL_NAME,
+    channel: ANTHROPIC_CHANNEL_NAME,
     topic: "status",
-    refreshToken: fetchOpenaiRequestRealTimeToken,
+    refreshToken: fetchAnthropicRequestRealTimeToken,
   });
 
   const handleOpenSettings = () => setDialogOpen(true);
 
-  const handleSubmit = (values: OpenaiFormValues) => {
+  const handleSubmit = (values: AnthropicFormValues) => {
     setNodes((nodes) =>
       nodes.map((node) => {
         if (node.id === props.id) {
@@ -59,7 +62,7 @@ export const OpenAiNode = memo((props: NodeProps<OpenAiNodeType>) => {
 
   return (
     <>
-      <OpenaiDialog
+      <AnthropicDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         onSubmit={handleSubmit}
@@ -68,8 +71,8 @@ export const OpenAiNode = memo((props: NodeProps<OpenAiNodeType>) => {
       <BaseExecutionNode
         {...props}
         id={props.id}
-        icon="/images/openai.svg"
-        name="OpenAI"
+        icon="/images/anthropic.svg"
+        name="Anthropic"
         description={description}
         status={nodeStatus}
         onSettings={handleOpenSettings}
@@ -79,4 +82,4 @@ export const OpenAiNode = memo((props: NodeProps<OpenAiNodeType>) => {
   );
 });
 
-OpenAiNode.displayName = "OpenAiNode";
+AnthropicNode.displayName = "AnthropicNode";
