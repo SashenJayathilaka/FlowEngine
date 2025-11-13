@@ -33,9 +33,8 @@ import { useForm } from "react-hook-form";
 import z from "zod";
 
 export const AVAILABLE_MODELS = [
-  "gpt-4",
-  "gpt-4-turbo",
-  "gpt-3.5-turbo",
+  "deepseek-chat", // general‐purpose chat mode (non-thinking mode). :contentReference[oaicite:2]{index=2}
+  "deepseek-reasoner", // reasoning / “thinking” mode. :contentReference[oaicite:3]{index=3}
 ] as const;
 
 const formSchema = z.object({
@@ -51,21 +50,21 @@ const formSchema = z.object({
   //.refine()
 });
 
-interface OpenaiProps {
+interface DeepseekProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSubmit: (values: z.infer<typeof formSchema>) => void;
-  defaultValues?: Partial<OpenaiFormValues>;
+  defaultValues?: Partial<DeepseekFormValues>;
 }
 
-export type OpenaiFormValues = z.infer<typeof formSchema>;
+export type DeepseekFormValues = z.infer<typeof formSchema>;
 
-export function OpenaiDialog({
+export function DeepseekDialog({
   open,
   onOpenChange,
   defaultValues = {},
   onSubmit,
-}: OpenaiProps) {
+}: DeepseekProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -102,9 +101,9 @@ export function OpenaiDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>OpenAI</DialogTitle>
+          <DialogTitle>Deepseek AI</DialogTitle>
           <DialogDescription>
-            Configure the OpenAI request details
+            Configure the Deepseek AI request details
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -119,7 +118,7 @@ export function OpenaiDialog({
                 <FormItem>
                   <FormLabel>Variable Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="My Openai" {...field} />
+                    <Input placeholder="My Deepseek" {...field} />
                   </FormControl>
                   <FormDescription>
                     The name of the variable to store the response{" "}

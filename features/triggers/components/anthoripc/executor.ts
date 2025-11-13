@@ -1,6 +1,6 @@
 import { NodeExecutor } from "@/features/execution/types";
-import { openaiChannel } from "@/inngest/channels/openai";
-import { createOpenAI } from "@ai-sdk/openai";
+import { anthropicChannel } from "@/inngest/channels/anthropic";
+import { createAnthropic } from "@ai-sdk/anthropic";
 import { generateText } from "ai";
 import Handlebars from "handlebars";
 import { NonRetriableError } from "inngest";
@@ -13,22 +13,18 @@ Handlebars.registerHelper("json", (context) => {
   return safeString;
 });
 
-export type OpenaiRequestData = {
+export type AnthropicRequestData = {
   variableName?: string;
   model?: (typeof AVAILABLE_MODELS)[number];
   systemPrompt?: string;
   userPrompt?: string;
 };
 
-export const openaiRequestExecutor: NodeExecutor<OpenaiRequestData> = async ({
-  data,
-  context,
-  nodeId,
-  step,
-  publish,
-}) => {
+export const anthropicRequestExecutor: NodeExecutor<
+  AnthropicRequestData
+> = async ({ data, context, nodeId, step, publish }) => {
   await publish(
-    openaiChannel().status({
+    anthropicChannel().status({
       nodeId,
       status: "loading",
     })
@@ -36,7 +32,7 @@ export const openaiRequestExecutor: NodeExecutor<OpenaiRequestData> = async ({
 
   if (!data.variableName) {
     await publish(
-      openaiChannel().status({
+      anthropicChannel().status({
         nodeId,
         status: "error",
       })
@@ -46,7 +42,7 @@ export const openaiRequestExecutor: NodeExecutor<OpenaiRequestData> = async ({
 
   if (!data.userPrompt) {
     await publish(
-      openaiChannel().status({
+      anthropicChannel().status({
         nodeId,
         status: "error",
       })
@@ -60,29 +56,33 @@ export const openaiRequestExecutor: NodeExecutor<OpenaiRequestData> = async ({
 
   const userPrompt = Handlebars.compile(data.userPrompt)(context);
 
-  const credentialValues = process.env.OPENAI_API_KEY || "";
+  const credentialValues = process.env.ANTHROPIC_API_KEY || "";
 
-  const openai = createOpenAI({
+  const anthropic = createAnthropic({
     apiKey: credentialValues,
   });
 
   try {
-    const { steps } = await step.ai.wrap("openai-generate-text", generateText, {
-      model: openai("gpt-4"),
-      system: systemPrompt,
-      prompt: userPrompt,
-      experimental_telemetry: {
-        isEnabled: true,
-        recordInputs: true,
-        recordOutputs: true,
-      },
-    });
+    const { steps } = await step.ai.wrap(
+      "anthropic-generate-text",
+      generateText,
+      {
+        model: anthropic("claude-2"),
+        system: systemPrompt,
+        prompt: userPrompt,
+        experimental_telemetry: {
+          isEnabled: true,
+          recordInputs: true,
+          recordOutputs: true,
+        },
+      }
+    );
 
     const text =
       steps[0].content[0].type === "text" ? steps[0].content[0].text : "";
 
     await publish(
-      openaiChannel().status({
+      anthropicChannel().status({
         nodeId,
         status: "success",
       })
@@ -96,7 +96,7 @@ export const openaiRequestExecutor: NodeExecutor<OpenaiRequestData> = async ({
     };
   } catch (error) {
     await publish(
-      openaiChannel().status({
+      anthropicChannel().status({
         nodeId,
         status: "error",
       })

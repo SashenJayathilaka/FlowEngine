@@ -1,10 +1,11 @@
 import { NodeExecutor } from "@/features/execution/types";
 import { openaiChannel } from "@/inngest/channels/openai";
-import { createOpenAI } from "@ai-sdk/openai";
+import { createDeepSeek } from "@ai-sdk/deepseek";
 import { generateText } from "ai";
 import Handlebars from "handlebars";
 import { NonRetriableError } from "inngest";
 import { AVAILABLE_MODELS } from "./dialog";
+import { deepseekChannel } from "@/inngest/channels/deepseek";
 
 Handlebars.registerHelper("json", (context) => {
   const stringified = JSON.stringify(context, null, 2);
@@ -13,22 +14,18 @@ Handlebars.registerHelper("json", (context) => {
   return safeString;
 });
 
-export type OpenaiRequestData = {
+export type DeepseekRequestData = {
   variableName?: string;
   model?: (typeof AVAILABLE_MODELS)[number];
   systemPrompt?: string;
   userPrompt?: string;
 };
 
-export const openaiRequestExecutor: NodeExecutor<OpenaiRequestData> = async ({
-  data,
-  context,
-  nodeId,
-  step,
-  publish,
-}) => {
+export const deepseekRequestExecutor: NodeExecutor<
+  DeepseekRequestData
+> = async ({ data, context, nodeId, step, publish }) => {
   await publish(
-    openaiChannel().status({
+    deepseekChannel().status({
       nodeId,
       status: "loading",
     })
@@ -36,7 +33,7 @@ export const openaiRequestExecutor: NodeExecutor<OpenaiRequestData> = async ({
 
   if (!data.variableName) {
     await publish(
-      openaiChannel().status({
+      deepseekChannel().status({
         nodeId,
         status: "error",
       })
@@ -60,29 +57,33 @@ export const openaiRequestExecutor: NodeExecutor<OpenaiRequestData> = async ({
 
   const userPrompt = Handlebars.compile(data.userPrompt)(context);
 
-  const credentialValues = process.env.OPENAI_API_KEY || "";
+  const credentialValues = process.env.DEEPSEEK_API_KEY || "";
 
-  const openai = createOpenAI({
+  const deepseek = createDeepSeek({
     apiKey: credentialValues,
   });
 
   try {
-    const { steps } = await step.ai.wrap("openai-generate-text", generateText, {
-      model: openai("gpt-4"),
-      system: systemPrompt,
-      prompt: userPrompt,
-      experimental_telemetry: {
-        isEnabled: true,
-        recordInputs: true,
-        recordOutputs: true,
-      },
-    });
+    const { steps } = await step.ai.wrap(
+      "deepseek-generate-text",
+      generateText,
+      {
+        model: deepseek("gpt-4"),
+        system: systemPrompt,
+        prompt: userPrompt,
+        experimental_telemetry: {
+          isEnabled: true,
+          recordInputs: true,
+          recordOutputs: true,
+        },
+      }
+    );
 
     const text =
       steps[0].content[0].type === "text" ? steps[0].content[0].text : "";
 
     await publish(
-      openaiChannel().status({
+      deepseekChannel().status({
         nodeId,
         status: "success",
       })
@@ -96,7 +97,7 @@ export const openaiRequestExecutor: NodeExecutor<OpenaiRequestData> = async ({
     };
   } catch (error) {
     await publish(
-      openaiChannel().status({
+      deepseekChannel().status({
         nodeId,
         status: "error",
       })

@@ -33,9 +33,9 @@ import { useForm } from "react-hook-form";
 import z from "zod";
 
 export const AVAILABLE_MODELS = [
-  "gpt-4",
-  "gpt-4-turbo",
-  "gpt-3.5-turbo",
+  "claude-2",
+  "claude-instant-100k",
+  "claude-1",
 ] as const;
 
 const formSchema = z.object({
@@ -51,21 +51,21 @@ const formSchema = z.object({
   //.refine()
 });
 
-interface OpenaiProps {
+interface AnthropicProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSubmit: (values: z.infer<typeof formSchema>) => void;
-  defaultValues?: Partial<OpenaiFormValues>;
+  defaultValues?: Partial<AnthropicFormValues>;
 }
 
-export type OpenaiFormValues = z.infer<typeof formSchema>;
+export type AnthropicFormValues = z.infer<typeof formSchema>;
 
-export function OpenaiDialog({
+export function AnthropicDialog({
   open,
   onOpenChange,
   defaultValues = {},
   onSubmit,
-}: OpenaiProps) {
+}: AnthropicProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -91,7 +91,7 @@ export function OpenaiDialog({
     }
   }, [open, defaultValues, form]);
 
-  const watchVariableName = form.watch("variableName") || "MyOpenai";
+  const watchVariableName = form.watch("variableName") || "anthropicResponse";
 
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
     onSubmit(values);
@@ -102,9 +102,9 @@ export function OpenaiDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>OpenAI</DialogTitle>
+          <DialogTitle>Anthropic AI</DialogTitle>
           <DialogDescription>
-            Configure the OpenAI request details
+            Configure the Anthropic AI request details
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -119,7 +119,7 @@ export function OpenaiDialog({
                 <FormItem>
                   <FormLabel>Variable Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="My Openai" {...field} />
+                    <Input placeholder="My Anthropic" {...field} />
                   </FormControl>
                   <FormDescription>
                     The name of the variable to store the response{" "}
@@ -141,10 +141,7 @@ export function OpenaiDialog({
                       defaultValue={field.value}
                     >
                       <FormControl>
-                        <SelectTrigger
-                          className="w-full"
-                          defaultValue={field.value[0]}
-                        >
+                        <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select a model" />
                         </SelectTrigger>
                       </FormControl>
