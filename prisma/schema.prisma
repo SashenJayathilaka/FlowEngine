@@ -15,16 +15,17 @@ datasource db {
 }
 
 model User {
-  id            String     @id
+  id            String       @id
   name          String
   email         String
-  emailVerified Boolean    @default(false)
+  emailVerified Boolean      @default(false)
   image         String?
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @default(now()) @updatedAt
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @default(now()) @updatedAt
   sessions      Session[]
   accounts      Account[]
   workflows     Workflow[]
+  credentials   Credential[]
 
   @@unique([email])
   @@map("user")
@@ -88,6 +89,27 @@ model Workflow {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+model Credential {
+  id        String         @id @default(cuid())
+  name      String
+  type      CredentialType
+  value     String
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @default(now()) @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  Node Node[]
+}
+
+enum CredentialType {
+  ANTHROPIC
+  GEMINI
+  OPENAI
+  DEEPSEEK
+}
+
 enum NodeType {
   INITIAL
   MANUAL_TRIGGER
@@ -109,6 +131,9 @@ model Node {
   data       Json     @default("{}")
   createdAt  DateTime @default(now())
   updatedAt  DateTime @default(now()) @updatedAt
+
+  credentialId String?
+  credential   Credential? @relation(fields: [credentialId], references: [id])
 
   outgoingConnections Connection[] @relation("FromNode")
   incomingConnections Connection[] @relation("ToNode")
