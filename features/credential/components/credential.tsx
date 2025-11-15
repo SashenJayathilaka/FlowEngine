@@ -12,14 +12,15 @@ import {
   LoadingView,
 } from "@/components/entry-components";
 import { useEntitySearch } from "@/hooks/use-entity-search";
-import { Workflow } from "@/lib/generated/prisma";
+import type { Credential } from "@/lib/generated/prisma";
+import { CredentialType } from "@/lib/generated/prisma";
 import { formatDistance } from "date-fns";
-import { WorkflowIcon } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React from "react";
 import {
   useRemoveCredential,
-  useSuspendCredential,
+  useSuspendCredentials,
 } from "../hooks/use-credential";
 import { useCredentialsParams } from "../hooks/use-credential-params";
 
@@ -40,7 +41,7 @@ export const CredentialsSearch = () => {
 };
 
 const CredentialsList = () => {
-  const credentials = useSuspendCredential();
+  const credentials = useSuspendCredentials();
 
   return (
     <EntryList
@@ -69,7 +70,7 @@ export const CredentialsHeader = ({ disabled }: { disabled?: boolean }) => {
 };
 
 export const CredentialsPagination = () => {
-  const credentials = useSuspendCredential();
+  const credentials = useSuspendCredentials();
   const [params, setParams] = useCredentialsParams();
 
   return (
@@ -120,12 +121,21 @@ export const CredentialsEmpty = () => {
   );
 };
 
-export const CredentialsItem = ({ data }: { data: Workflow }) => {
+const CredentialsLogos: Record<CredentialType, string> = {
+  [CredentialType.OPENAI]: "/images/openai.svg",
+  [CredentialType.ANTHROPIC]: "/images/anthropic.svg",
+  [CredentialType.GEMINI]: "/images/gemini_icon.png",
+  [CredentialType.DEEPSEEK]: "/images/Deepseek-logo-icon.svg",
+};
+
+export const CredentialsItem = ({ data }: { data: Credential }) => {
   const removeCredential = useRemoveCredential();
 
   const handleRemove = () => {
     removeCredential.mutate({ id: data.id });
   };
+
+  const logo = CredentialsLogos[data.type] || "/images/openai.svg";
 
   return (
     <EntryItem
@@ -145,7 +155,7 @@ export const CredentialsItem = ({ data }: { data: Workflow }) => {
       }
       image={
         <div className="size-8 flex items-center justify-center">
-          <WorkflowIcon className="size-5 text-muted-foreground" />
+          <Image src={logo} alt={data.type} width={30} height={20} />
         </div>
       }
       onRemove={handleRemove}

@@ -6,6 +6,7 @@ import Handlebars from "handlebars";
 import { NonRetriableError } from "inngest";
 import { AVAILABLE_MODELS } from "./dialog";
 import { deepseekChannel } from "@/inngest/channels/deepseek";
+import prisma from "@/lib/db";
 
 Handlebars.registerHelper("json", (context) => {
   const stringified = JSON.stringify(context, null, 2);
@@ -19,6 +20,7 @@ export type DeepseekRequestData = {
   model?: (typeof AVAILABLE_MODELS)[number];
   systemPrompt?: string;
   userPrompt?: string;
+  credentialId?: string;
 };
 
 export const deepseekRequestExecutor: NodeExecutor<
@@ -51,16 +53,36 @@ export const deepseekRequestExecutor: NodeExecutor<
     throw new NonRetriableError("User prompt is required");
   }
 
+  if (!data.credentialId) {
+    await publish(
+      deepseekChannel().status({
+        nodeId,
+        status: "error",
+      })
+    );
+    throw new NonRetriableError("Credential ID is required");
+  }
+
   const systemPrompt = data.systemPrompt
     ? Handlebars.compile(data.systemPrompt)(context)
     : "you are a helpful assistant";
 
   const userPrompt = Handlebars.compile(data.userPrompt)(context);
 
-  const credentialValues = process.env.DEEPSEEK_API_KEY || "";
+  const credential = await step.run("get-credential", () => {
+    return prisma.credential.findUnique({
+      where: {
+        id: data.credentialId,
+      },
+    });
+  });
+
+  if (!credential) {
+    throw new NonRetriableError("Credential not found");
+  }
 
   const deepseek = createDeepSeek({
-    apiKey: credentialValues,
+    apiKey: credential.value,
   });
 
   try {

@@ -17,6 +17,7 @@ type anthropicNodeData = {
   model?: (typeof AVAILABLE_MODELS)[number];
   systemPrompt?: string;
   userPrompt?: string;
+  credentialId?: string;
 };
 
 type AnthropicNodeType = Node<anthropicNodeData>;
