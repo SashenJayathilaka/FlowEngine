@@ -27,7 +27,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { useCredentialByType } from "@/features/credential/hooks/use-credential";
+import { CredentialType } from "@/lib/generated/prisma";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Image from "next/image";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
@@ -45,6 +48,7 @@ const formSchema = z.object({
   model: z.enum(AVAILABLE_MODELS),
   systemPrompt: z.string().optional(),
   userPrompt: z.string().min(1, { message: "User prompt is required" }),
+  credentialId: z.string().min(1, { message: "Credential ID is required" }),
   method: z.enum(["GET", "POST", "PUT", "DELETE", "PATCH"]),
   body: z.string().optional(),
   //.refine()
@@ -65,6 +69,9 @@ export function DeepseekDialog({
   defaultValues = {},
   onSubmit,
 }: DeepseekProps) {
+  const { data: credentials, isLoading: isLoadingCredentials } =
+    useCredentialByType(CredentialType.DEEPSEEK);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -128,6 +135,44 @@ export function DeepseekDialog({
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={form.control}
+              name="credentialId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Gemini Credential</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    disabled={isLoadingCredentials || !credentials?.length}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select a credential" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {credentials?.map((credential) => (
+                        <SelectItem key={credential.id} value={credential.id}>
+                          <div className="flex items-center gap-4">
+                            <Image
+                              src="/images/Deepseek-logo-icon.svg"
+                              alt="deepseek"
+                              width={24}
+                              height={24}
+                            />
+                            {credential.name}
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <FormField
               control={form.control}
               name="model"

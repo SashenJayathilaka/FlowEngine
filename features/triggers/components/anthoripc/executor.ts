@@ -1,5 +1,6 @@
 import { NodeExecutor } from "@/features/execution/types";
 import { anthropicChannel } from "@/inngest/channels/anthropic";
+import prisma from "@/lib/db";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { generateText } from "ai";
 import Handlebars from "handlebars";
@@ -18,6 +19,7 @@ export type AnthropicRequestData = {
   model?: (typeof AVAILABLE_MODELS)[number];
   systemPrompt?: string;
   userPrompt?: string;
+  credentialId?: string;
 };
 
 export const anthropicRequestExecutor: NodeExecutor<
@@ -50,16 +52,36 @@ export const anthropicRequestExecutor: NodeExecutor<
     throw new NonRetriableError("User prompt is required");
   }
 
+  if (!data.credentialId) {
+    await publish(
+      anthropicChannel().status({
+        nodeId,
+        status: "error",
+      })
+    );
+    throw new NonRetriableError("Credential ID is required");
+  }
+
   const systemPrompt = data.systemPrompt
     ? Handlebars.compile(data.systemPrompt)(context)
     : "you are a helpful assistant";
 
   const userPrompt = Handlebars.compile(data.userPrompt)(context);
 
-  const credentialValues = process.env.ANTHROPIC_API_KEY || "";
+  const credential = await step.run("get-credential", () => {
+    return prisma.credential.findUnique({
+      where: {
+        id: data.credentialId,
+      },
+    });
+  });
+
+  if (!credential) {
+    throw new NonRetriableError("Credential not found");
+  }
 
   const anthropic = createAnthropic({
-    apiKey: credentialValues,
+    apiKey: credential.value,
   });
 
   try {

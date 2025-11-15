@@ -34,6 +34,7 @@ import { useForm } from "react-hook-form";
 import z from "zod";
 import {
   useCreateCredential,
+  useSuspendCredential,
   useUpdateCredential,
 } from "../hooks/use-credential";
 
@@ -211,3 +212,13 @@ const CredentialsForm = ({ initialData }: CredentialsProps) => {
 };
 
 export default CredentialsForm;
+
+export const CredentialView = ({
+  credentialsId,
+}: {
+  credentialsId: string;
+}) => {
+  const { data: credential } = useSuspendCredential(credentialsId);
+
+  return <CredentialsForm initialData={credential} />;
+};

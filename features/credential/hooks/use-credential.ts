@@ -9,7 +9,7 @@ import {
 import { toast } from "sonner";
 import { useCredentialsParams } from "./use-credential-params";
 
-export const useSuspendCredential = () => {
+export const useSuspendCredentials = () => {
   const trpc = useTRPC();
 
   const [params] = useCredentialsParams();
@@ -55,6 +55,11 @@ export const useRemoveCredential = () => {
       },
     })
   );
+};
+
+export const useSuspendCredential = (id: string) => {
+  const trpc = useTRPC();
+  return useSuspenseQuery(trpc.credentials.getOne.queryOptions({ id }));
 };
 
 /** Update a credential */
