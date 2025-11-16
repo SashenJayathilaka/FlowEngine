@@ -120,6 +120,8 @@ enum NodeType {
   GEMINI
   OPENAI
   DEEPSEEK
+  DISCORD
+  SLACK
 }
 
 model Node {

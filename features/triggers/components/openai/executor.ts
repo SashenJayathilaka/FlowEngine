@@ -27,6 +27,7 @@ export const openaiRequestExecutor: NodeExecutor<OpenaiRequestData> = async ({
   context,
   nodeId,
   step,
+  userId,
   publish,
 }) => {
   await publish(
@@ -75,11 +76,19 @@ export const openaiRequestExecutor: NodeExecutor<OpenaiRequestData> = async ({
     return prisma.credential.findUnique({
       where: {
         id: data.credentialId,
+        userId,
       },
     });
   });
 
   if (!credential) {
+    await publish(
+      openaiChannel().status({
+        nodeId,
+        status: "error",
+      })
+    );
+
     throw new NonRetriableError("Credential not found");
   }
 

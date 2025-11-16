@@ -76,6 +76,18 @@ const executionNode: NodeTypeOption[] = [
     description: "Deepseek's powerful AI models at your fingertips.",
     icon: "/images/Deepseek-logo-icon.svg",
   },
+  {
+    type: NodeType.DISCORD,
+    label: "Discord",
+    description: "Interact with Discord's API and events.",
+    icon: "/images/discord-icon.svg",
+  },
+  {
+    type: NodeType.SLACK,
+    label: "Slack",
+    description: "Interact with Slack's API and events.",
+    icon: "/images/Slack_icon.svg",
+  },
 ];
 
 interface NodeSelectorProps {
