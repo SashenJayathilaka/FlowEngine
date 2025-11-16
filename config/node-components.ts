@@ -1,11 +1,13 @@
 import { InitialNode } from "@/components/initial-node";
 import { AnthropicNode } from "@/features/triggers/components/anthoripc/node";
 import { DeepseekNode } from "@/features/triggers/components/deepseek/node";
+import { DiscordNode } from "@/features/triggers/components/discord/node";
 import { GeminiNode } from "@/features/triggers/components/geminai/node";
 import { GoogleFormTriggerNode } from "@/features/triggers/components/google-form-trigger/node";
 import { HttpRequestNode } from "@/features/triggers/components/http-request-trigger/node";
 import { ManualTriggerNode } from "@/features/triggers/components/manual-trigger/node";
 import { OpenAiNode } from "@/features/triggers/components/openai/node";
+import { SlackNode } from "@/features/triggers/components/slack/node";
 import { StripeTriggerNode } from "@/features/triggers/components/stripe-trigger copy/node";
 import { NodeType } from "@/lib/generated/prisma";
 import type { NodeTypes } from "@xyflow/react";
@@ -20,6 +22,8 @@ export const nodeComponents = {
   [NodeType.OPENAI]: OpenAiNode,
   [NodeType.ANTHROPIC]: AnthropicNode,
   [NodeType.DEEPSEEK]: DeepseekNode,
+  [NodeType.DISCORD]: DiscordNode,
+  [NodeType.SLACK]: SlackNode,
 } as const satisfies NodeTypes;
 
 export type RegisteredNodeType = keyof typeof nodeComponents;

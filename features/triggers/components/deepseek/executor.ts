@@ -1,12 +1,12 @@
 import { NodeExecutor } from "@/features/execution/types";
+import { deepseekChannel } from "@/inngest/channels/deepseek";
 import { openaiChannel } from "@/inngest/channels/openai";
+import prisma from "@/lib/db";
 import { createDeepSeek } from "@ai-sdk/deepseek";
 import { generateText } from "ai";
 import Handlebars from "handlebars";
 import { NonRetriableError } from "inngest";
 import { AVAILABLE_MODELS } from "./dialog";
-import { deepseekChannel } from "@/inngest/channels/deepseek";
-import prisma from "@/lib/db";
 
 Handlebars.registerHelper("json", (context) => {
   const stringified = JSON.stringify(context, null, 2);
@@ -25,7 +25,7 @@ export type DeepseekRequestData = {
 
 export const deepseekRequestExecutor: NodeExecutor<
   DeepseekRequestData
-> = async ({ data, context, nodeId, step, publish }) => {
+> = async ({ data, context, nodeId, step, userId, publish }) => {
   await publish(
     deepseekChannel().status({
       nodeId,
@@ -73,11 +73,18 @@ export const deepseekRequestExecutor: NodeExecutor<
     return prisma.credential.findUnique({
       where: {
         id: data.credentialId,
+        userId,
       },
     });
   });
 
   if (!credential) {
+    await publish(
+      deepseekChannel().status({
+        nodeId,
+        status: "error",
+      })
+    );
     throw new NonRetriableError("Credential not found");
   }
 
