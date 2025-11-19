@@ -6,6 +6,7 @@ import { generateText } from "ai";
 import Handlebars from "handlebars";
 import { NonRetriableError } from "inngest";
 import { AVAILABLE_MODELS } from "./dialog";
+import { decrypt } from "@/lib/encriptions";
 
 Handlebars.registerHelper("json", (context) => {
   const stringified = JSON.stringify(context, null, 2);
@@ -95,7 +96,7 @@ export const geminiRequestExecutor: NodeExecutor<GeminiRequestData> = async ({
   }
 
   const google = createGoogleGenerativeAI({
-    apiKey: credential.value,
+    apiKey: decrypt(credential.value),
   });
 
   try {
