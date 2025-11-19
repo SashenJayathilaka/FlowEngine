@@ -2,6 +2,7 @@ import { NodeExecutor } from "@/features/execution/types";
 import { deepseekChannel } from "@/inngest/channels/deepseek";
 import { openaiChannel } from "@/inngest/channels/openai";
 import prisma from "@/lib/db";
+import { decrypt } from "@/lib/encriptions";
 import { createDeepSeek } from "@ai-sdk/deepseek";
 import { generateText } from "ai";
 import Handlebars from "handlebars";
@@ -89,7 +90,7 @@ export const deepseekRequestExecutor: NodeExecutor<
   }
 
   const deepseek = createDeepSeek({
-    apiKey: credential.value,
+    apiKey: decrypt(credential.value),
   });
 
   try {
