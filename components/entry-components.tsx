@@ -28,18 +28,17 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 
-type EntryHeaderProps =
-  | {
-      title: string;
-      description?: string;
-      newButtonLabel?: string;
-      disabled?: boolean;
-      isCreating?: boolean;
-    } & (
-      | { onNew: () => void; newButtonHref?: never }
-      | { newButtonHref: string; onNew?: never }
-      | { onNew?: never; newButtonHref?: never }
-    );
+type EntryHeaderProps = {
+  title: string;
+  description?: string;
+  newButtonLabel?: string;
+  disabled?: boolean;
+  isCreating?: boolean;
+} & (
+  | { onNew: () => void; newButtonHref?: never }
+  | { newButtonHref: string; onNew?: never }
+  | { onNew?: never; newButtonHref?: never }
+);
 
 export const EntryHeader = ({
   title,
@@ -204,7 +203,7 @@ interface EmptyViewProps extends StateViewProps {
 
 export const EmptyView = ({ message, onNew }: EmptyViewProps) => {
   return (
-    <Empty className="border border-dashed bg-white">
+    <Empty className="border border-dashed bg-gray-900">
       <EmptyHeader>
         <EmptyMedia variant="icon">
           <PackageOpen />
@@ -295,7 +294,7 @@ export const EntryItem = ({
         className={cn(
           "p-4 shadow-none hover:shadow cursor-pointer",
           isRemoving && "opacity-50 cursor-not-allowed",
-          className
+          className,
         )}
       >
         <CardContent className="flex flex-row items-center justify-between p-0">
