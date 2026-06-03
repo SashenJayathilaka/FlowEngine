@@ -4,7 +4,7 @@ import React from "react";
 
 const AuthLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="bg-muted flex min-h-svh flex-col justify-center gap-6 p-6 items-center md:p-10">
+    <div className="flex min-h-svh flex-col justify-center gap-6 p-6 items-center md:p-10 bg-background bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/20 via-background to-background">
       <div className="flex w-full max-w-sm flex-col gap-6">
         <Link
           href="/"
