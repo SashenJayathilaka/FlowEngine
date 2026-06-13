@@ -2,13 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
   Form,
   FormControl,
   FormField,
@@ -94,98 +87,126 @@ const LoginForm = () => {
   const isPending = form.formState.isSubmitting;
 
   return (
-    <div className="flex flex-col gap-6">
-      <Card>
-        <CardHeader className="text-center">
-          <CardTitle>Welcome back! 👋</CardTitle>
-          <CardDescription>Login to your account to continue</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-              <div className="grid gap-6">
-                <div className="flex flex-col gap-4">
-                  <Button
-                    onClick={signInWithGitHub}
-                    variant="outline"
-                    className="w-full"
-                    type="button"
-                    disabled={isPending}
-                  >
-                    <Image
-                      src="/images/github.svg"
-                      alt="github"
-                      width={20}
-                      height={20}
+    <div className="flex flex-col gap-5">
+      <div className="gradient-border rounded-xl overflow-hidden">
+        <div className="bg-card/80 backdrop-blur-xl rounded-xl border border-border/40 shadow-2xl shadow-black/30">
+          <div className="px-7 pt-7 pb-4 text-center border-b border-border/30">
+            <h2 className="text-xl font-bold tracking-tight text-foreground">Welcome back! 👋</h2>
+            <p className="text-sm text-muted-foreground/70 mt-1">Sign in to your account to continue</p>
+          </div>
+          <div className="p-7">
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)}>
+                <div className="grid gap-5">
+                  <div className="flex flex-col gap-3">
+                    <Button
+                      onClick={signInWithGitHub}
+                      variant="outline"
+                      className="w-full gap-x-2 border-border/60 bg-muted/30 hover:bg-muted/60 hover:border-border transition-all duration-200"
+                      type="button"
+                      disabled={isPending}
+                    >
+                      <Image
+                        src="/images/github.svg"
+                        alt="github"
+                        width={18}
+                        height={18}
+                        className="brightness-0 invert opacity-80"
+                      />
+                      <span className="text-sm">Continue with GitHub</span>
+                    </Button>
+                    <Button
+                      onClick={signInWithGoogle}
+                      variant="outline"
+                      className="w-full gap-x-2 border-border/60 bg-muted/30 hover:bg-muted/60 hover:border-border transition-all duration-200"
+                      type="button"
+                      disabled={isPending}
+                    >
+                      <Image
+                        src="/images/google.svg"
+                        alt="google"
+                        width={18}
+                        height={18}
+                      />
+                      <span className="text-sm">Continue with Google</span>
+                    </Button>
+                  </div>
+
+                  <div className="relative">
+                    <div className="absolute inset-0 flex items-center">
+                      <div className="w-full border-t border-border/40" />
+                    </div>
+                    <div className="relative flex justify-center text-xs">
+                      <span className="bg-card px-3 text-muted-foreground/60 font-medium uppercase tracking-wider">or</span>
+                    </div>
+                  </div>
+
+                  <div className="grid gap-4">
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">Email</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="email"
+                              placeholder="you@example.com"
+                              className="bg-muted/30 border-border/60 focus:border-primary/60 focus:bg-background transition-all duration-200 focus:ring-1 focus:ring-primary/30 placeholder:text-muted-foreground/40"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage className="text-xs" />
+                        </FormItem>
+                      )}
                     />
-                    Continue with GitHub
-                  </Button>
-                  <Button
-                    onClick={signInWithGoogle}
-                    variant="outline"
-                    className="w-full"
-                    type="button"
-                    disabled={isPending}
-                  >
-                    <Image
-                      src="/images/google.svg"
-                      alt="google"
-                      width={20}
-                      height={20}
+                    <FormField
+                      control={form.control}
+                      name="password"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">Password</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="password"
+                              placeholder="••••••••"
+                              className="bg-muted/30 border-border/60 focus:border-primary/60 focus:bg-background transition-all duration-200 focus:ring-1 focus:ring-primary/30 placeholder:text-muted-foreground/40"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage className="text-xs" />
+                        </FormItem>
+                      )}
                     />
-                    Continue with Google
-                  </Button>
+                    <Button
+                      type="submit"
+                      className="w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-md shadow-primary/20 border-0 transition-all duration-200 hover:shadow-lg hover:shadow-primary/30 font-semibold"
+                      disabled={isPending}
+                    >
+                      {isPending ? (
+                        <span className="flex items-center gap-2">
+                          <svg className="animate-spin size-4" viewBox="0 0 24 24" fill="none">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                          </svg>
+                          Signing in...
+                        </span>
+                      ) : "Sign In"}
+                    </Button>
+                  </div>
+
+                  <div className="text-center text-sm text-muted-foreground/70">
+                    Don&apos;t have an account?{" "}
+                    <a href="/signup" className="text-primary hover:text-primary/80 font-medium underline-offset-4 hover:underline transition-colors">
+                      Sign Up
+                    </a>
+                  </div>
                 </div>
-                <div className="grid gap-6">
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="email"
-                            placeholder="example@gmail.com"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Password</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="password"
-                            placeholder="******"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <Button type="submit" className="w-full" disabled={isPending}>
-                    Login
-                  </Button>
-                </div>
-                <div className="text-center text-sm">
-                  Don&apos;t have an account?{" "}
-                  <a href="/signup" className="underline underline-offset-4">
-                    Sign Up
-                  </a>
-                </div>
-              </div>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
+              </form>
+            </Form>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

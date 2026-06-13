@@ -116,16 +116,16 @@ const CredentialsForm = ({ initialData }: CredentialsProps) => {
   return (
     <>
       {modal}
-      <Card className="shadow-none">
-        <CardHeader>
-          <CardTitle>{isEdit ? "Edit Credential" : "New Credential"}</CardTitle>
-          <CardDescription>
+      <Card className="border border-border/50 bg-card/80 backdrop-blur-sm shadow-lg shadow-black/10">
+        <CardHeader className="pb-4 border-b border-border/30">
+          <CardTitle className="text-lg font-bold tracking-tight">{isEdit ? "Edit Credential" : "New Credential"}</CardTitle>
+          <CardDescription className="text-sm text-muted-foreground/70">
             {isEdit
               ? "Update your existing credential details below."
               : "Create a new credential to get started."}
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-6">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField
@@ -133,11 +133,15 @@ const CredentialsForm = ({ initialData }: CredentialsProps) => {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="My API Key" {...field} />
+                      <Input
+                        placeholder="My API Key"
+                        className="bg-muted/30 border-border/60 focus:border-primary/60 focus:bg-background transition-all duration-200 focus:ring-1 focus:ring-primary/30"
+                        {...field}
+                      />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-xs" />
                   </FormItem>
                 )}
               />
@@ -147,22 +151,22 @@ const CredentialsForm = ({ initialData }: CredentialsProps) => {
                 name="type"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Type</FormLabel>
+                    <FormLabel className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">Type</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
-                        <SelectTrigger className="w-full">
+                        <SelectTrigger className="w-full bg-muted/30 border-border/60 focus:border-primary/60 focus:ring-1 focus:ring-primary/30">
                           <SelectValue />
                         </SelectTrigger>
                       </FormControl>
-                      <SelectContent>
+                      <SelectContent className="bg-popover/95 backdrop-blur-sm border-border/60">
                         {credentialTypesOptions.map((option) => (
                           <SelectItem key={option.value} value={option.value}>
-                            <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-3">
                               <Image
                                 src={option.logo}
                                 alt={option.label}
-                                width={24}
-                                height={24}
+                                width={20}
+                                height={20}
                               />
                               {option.label}
                             </div>
@@ -170,7 +174,7 @@ const CredentialsForm = ({ initialData }: CredentialsProps) => {
                         ))}
                       </SelectContent>
                     </Select>
-                    <FormMessage />
+                    <FormMessage className="text-xs" />
                   </FormItem>
                 )}
               />
@@ -180,24 +184,30 @@ const CredentialsForm = ({ initialData }: CredentialsProps) => {
                 name="value"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>API Key</FormLabel>
+                    <FormLabel className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">API Key</FormLabel>
                     <FormControl>
-                      <Input placeholder="SK....." type="password" {...field} />
+                      <Input
+                        placeholder="sk-..."
+                        type="password"
+                        className="bg-muted/30 border-border/60 focus:border-primary/60 focus:bg-background transition-all duration-200 focus:ring-1 focus:ring-primary/30 font-mono"
+                        {...field}
+                      />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-xs" />
                   </FormItem>
                 )}
               />
-              <div className="flex gap-4">
+              <div className="flex gap-3 pt-2">
                 <Button
                   type="submit"
+                  className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-md shadow-primary/20 border-0 transition-all duration-200"
                   disabled={
                     createCredential.isPending || updateCredential.isPending
                   }
                 >
                   {isEdit ? "Update Credential" : "Create Credential"}
                 </Button>
-                <Button type="button" variant="outline" asChild>
+                <Button type="button" variant="outline" asChild className="border-border/60 hover:bg-accent/40 hover:border-border transition-all duration-200">
                   <Link href="/credentials" prefetch>
                     Cancel
                   </Link>

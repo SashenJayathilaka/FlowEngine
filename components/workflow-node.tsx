@@ -24,12 +24,22 @@ export function WorkflowNode({
   return (
     <>
       {showToolbar && (
-        <NodeToolbar>
-          <Button size="sm" variant="ghost" onClick={onSettings}>
-            <SettingsIcon className="size-4" />
+        <NodeToolbar className="flex gap-1 bg-card/90 backdrop-blur-sm border border-border/60 rounded-lg p-1 shadow-lg shadow-black/20">
+          <Button
+            size="sm"
+            variant="ghost"
+            className="size-7 p-0 hover:bg-accent/60 hover:text-primary text-muted-foreground transition-all duration-200"
+            onClick={onSettings}
+          >
+            <SettingsIcon className="size-3.5" />
           </Button>
-          <Button size="sm" variant="ghost" onClick={onDelete}>
-            <TrashIcon className="size-4" />
+          <Button
+            size="sm"
+            variant="ghost"
+            className="size-7 p-0 hover:bg-destructive/10 hover:text-destructive text-muted-foreground transition-all duration-200"
+            onClick={onDelete}
+          >
+            <TrashIcon className="size-3.5" />
           </Button>
         </NodeToolbar>
       )}
@@ -38,11 +48,11 @@ export function WorkflowNode({
         <NodeToolbar
           position={Position.Bottom}
           isVisible
-          className="max-w-[200px] text-center"
+          className="max-w-[200px] text-center bg-card/80 backdrop-blur-sm border border-border/40 rounded-lg px-3 py-1.5 shadow-md shadow-black/20"
         >
-          <p className="font-medium">{name}</p>
+          <p className="font-semibold text-sm text-foreground/90">{name}</p>
           {description && (
-            <p className="text-muted-foreground truncate text-sm">
+            <p className="text-muted-foreground/60 truncate text-xs mt-0.5">
               {description}
             </p>
           )}

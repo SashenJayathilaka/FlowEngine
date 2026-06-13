@@ -155,84 +155,91 @@ export const NodeSelector = ({
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetTrigger asChild>{children}</SheetTrigger>
-      <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto">
-        <SheetHeader>
-          <SheetTitle>What triggers your workflow?</SheetTitle>
-          <SheetDescription>
-            A trigger starts the workflow execution. You can always add more
-            nodes later.
+      <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto bg-background/95 backdrop-blur-xl border-l border-border/50">
+        <SheetHeader className="pb-4 border-b border-border/40">
+          <SheetTitle className="text-lg font-bold tracking-tight">Add a node</SheetTitle>
+          <SheetDescription className="text-sm text-muted-foreground/70">
+            Choose what happens in your workflow.
           </SheetDescription>
         </SheetHeader>
-        <div>
+
+        <div className="mt-4">
+          <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/50 px-1 mb-2">
+            Triggers
+          </p>
           {triggerNode.map((nodeType) => {
             const Icon = nodeType.icon;
             return (
               <div
                 key={nodeType.type}
-                className="w-full justify-start h-auto py-5 px-5 rounded-none cursor-pointer border-l-2 border-transparent hover:border-l-primary"
+                className="flex items-center gap-4 px-3 py-3.5 rounded-lg cursor-pointer hover:bg-primary/10 border border-transparent hover:border-primary/20 transition-all duration-200 group mb-1"
                 onClick={() => {
                   handleNodeSelect(nodeType);
                 }}
               >
-                <div className="flex items-center gap-6 w-full overflow-hidden">
+                <div className="size-9 rounded-lg bg-muted/60 group-hover:bg-primary/15 flex items-center justify-center flex-shrink-0 transition-colors duration-200 border border-border/40 group-hover:border-primary/30">
                   {typeof Icon === "string" ? (
                     <img
                       src={Icon}
                       alt={nodeType.label}
-                      className="size-5 object-contain rounded-md"
+                      className="size-5 object-contain"
                     />
                   ) : (
-                    <Icon className="size-5" />
+                    <Icon className="size-4 text-muted-foreground group-hover:text-primary transition-colors" />
                   )}
-                  <div className="flex flex-col items-start text-left">
-                    <span className="font-medium text-sm">
-                      {nodeType.label}
-                    </span>
-                    <span className="text-xs text-muted-foreground">
-                      {nodeType.description}
-                    </span>
-                  </div>
+                </div>
+                <div className="flex flex-col items-start text-left min-w-0">
+                  <span className="font-semibold text-sm text-foreground/90 group-hover:text-foreground transition-colors">
+                    {nodeType.label}
+                  </span>
+                  <span className="text-xs text-muted-foreground/60 truncate w-full">
+                    {nodeType.description}
+                  </span>
                 </div>
               </div>
             );
           })}
         </div>
-        <Separator />
+
+        <Separator className="my-4 opacity-40" />
+
         <div>
+          <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/50 px-1 mb-2">
+            Actions
+          </p>
           {executionNode.map((nodeType) => {
             const Icon = nodeType.icon;
             return (
               <div
                 key={nodeType.type}
-                className="w-full justify-start h-auto py-5 px-5 rounded-none cursor-pointer border-l-2 border-transparent hover:border-l-primary"
+                className="flex items-center gap-4 px-3 py-3.5 rounded-lg cursor-pointer hover:bg-primary/10 border border-transparent hover:border-primary/20 transition-all duration-200 group mb-1"
                 onClick={() => {
                   handleNodeSelect(nodeType);
                 }}
               >
-                <div className="flex items-center gap-6 w-full overflow-hidden">
+                <div className="size-9 rounded-lg bg-muted/60 group-hover:bg-primary/15 flex items-center justify-center flex-shrink-0 transition-colors duration-200 border border-border/40 group-hover:border-primary/30">
                   {typeof Icon === "string" ? (
                     <img
                       src={Icon}
                       alt={nodeType.label}
-                      className="size-5 object-contain rounded-md"
+                      className="size-5 object-contain"
                     />
                   ) : (
-                    <Icon className="size-5" />
+                    <Icon className="size-4 text-muted-foreground group-hover:text-primary transition-colors" />
                   )}
-                  <div className="flex flex-col items-start text-left">
-                    <span className="font-medium text-sm">
-                      {nodeType.label}
-                    </span>
-                    <span className="text-xs text-muted-foreground">
-                      {nodeType.description}
-                    </span>
-                  </div>
+                </div>
+                <div className="flex flex-col items-start text-left min-w-0">
+                  <span className="font-semibold text-sm text-foreground/90 group-hover:text-foreground transition-colors">
+                    {nodeType.label}
+                  </span>
+                  <span className="text-xs text-muted-foreground/60 truncate w-full">
+                    {nodeType.description}
+                  </span>
                 </div>
               </div>
             );
           })}
         </div>
-        <Separator />
       </SheetContent>
     </Sheet>
   );

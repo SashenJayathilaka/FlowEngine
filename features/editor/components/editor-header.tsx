@@ -36,8 +36,13 @@ export const EditorSaveButton = ({ workflowId }: { workflowId: string }) => {
 
   return (
     <div className="ml-auto">
-      <Button size="sm" onClick={handleSave} disabled={saveWorkflow.isPending}>
-        <SaveIcon className="size-4" /> Save
+      <Button
+        size="sm"
+        onClick={handleSave}
+        disabled={saveWorkflow.isPending}
+        className="gap-x-1.5 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-sm shadow-primary/20 border-0 transition-all duration-200"
+      >
+        <SaveIcon className="size-3.5" /> Save
       </Button>
     </div>
   );
@@ -130,8 +135,9 @@ export const EditorBreadcrumbs = ({ workflowId }: { workflowId: string }) => {
 
 const EditorHeader = ({ workflowId }: { workflowId: string }) => {
   return (
-    <header className="flex h-14 shrink-0 items-center gap-2 border-b px-4 bg-background">
-      <SidebarTrigger />
+    <header className="flex h-14 shrink-0 items-center gap-3 border-b border-border/50 px-4 bg-background/80 backdrop-blur-sm sticky top-0 z-10">
+      <SidebarTrigger className="text-muted-foreground hover:text-foreground transition-colors" />
+      <div className="h-5 w-px bg-border/60" />
       <div className="flex flex-row items-center justify-between gap-x-4 w-full">
         <EditorBreadcrumbs workflowId={workflowId} />
         <EditorSaveButton workflowId={workflowId} />

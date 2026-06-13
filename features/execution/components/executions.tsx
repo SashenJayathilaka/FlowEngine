@@ -93,13 +93,13 @@ export const ExecutionsEmpty = () => {
 const getStatusIcon = (status: ExecutionStatus) => {
   switch (status) {
     case ExecutionStatus.SUCCESS:
-      return <CheckCircle2Icon className="size-5 text-green-600" />;
+      return <CheckCircle2Icon className="size-5 text-emerald-500" />;
     case ExecutionStatus.FAILED:
-      return <XCircleIcon className="size-5 text-red-600" />;
+      return <XCircleIcon className="size-5 text-destructive" />;
     case ExecutionStatus.RUNNING:
-      return <Loader2Icon className="size-5 text-blue-600 animate-spin" />;
+      return <Loader2Icon className="size-5 text-primary animate-spin" />;
     default:
-      return <ClockIcon className="size-5 text-muted-foreground" />;
+      return <ClockIcon className="size-5 text-muted-foreground/60" />;
   }
 };
 

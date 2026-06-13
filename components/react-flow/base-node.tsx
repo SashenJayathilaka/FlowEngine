@@ -10,9 +10,10 @@ interface BaseNodeProps extends HTMLAttributes<HTMLDivElement> {
 export const BaseNode = forwardRef<HTMLDivElement, BaseNodeProps>(
   ({ className, status, ...props }, ref) => (
     <div
+      id="base-node"
       ref={ref}
       className={cn(
-        "relative rounded-sm border border-muted-foreground bg-card text-card-foreground hover:bg-accent",
+        "relative rounded-xl border border-border/60 bg-card/90 text-card-foreground hover:bg-card hover:border-primary/40 backdrop-blur-sm shadow-lg shadow-black/20 transition-all duration-200",
         className
       )}
       tabIndex={0}
@@ -20,13 +21,13 @@ export const BaseNode = forwardRef<HTMLDivElement, BaseNodeProps>(
     >
       {props.children}
       {status === "error" && (
-        <XCircleIcon className="absolute right-0.5 bottom-0.5 size-2 text-red-700 stroke-3" />
+        <XCircleIcon className="absolute right-1 bottom-1 size-3 text-destructive stroke-2" />
       )}
       {status === "success" && (
-        <CheckCircleIcon className="absolute right-0.5 bottom-0.5 size-2 text-green-700 stroke-3" />
+        <CheckCircleIcon className="absolute right-1 bottom-1 size-3 text-emerald-500 stroke-2" />
       )}
       {status === "loading" && (
-        <Loader2Icon className="absolute -right-0.5 -bottom-0.5 size-2 text-blue-700 stroke-3 animate-spin" />
+        <Loader2Icon className="absolute right-1 bottom-1 size-3 text-primary stroke-2 animate-spin" />
       )}
     </div>
   )
